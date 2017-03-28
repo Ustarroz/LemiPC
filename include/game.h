@@ -5,7 +5,7 @@
 ** Login   <ustarr_r@epitech.eu>
 **
 ** Started on  Fri Mar 24 16:52:28 2017 ustarr_r
-// Last update Sat Mar 25 14:57:08 2017 Vagrant Default User
+// Last update Sun Mar 26 02:32:57 2017 Vagrant Default User
 */
 #ifndef GAME_H_
 # define GAME_H_
@@ -22,7 +22,7 @@ typedef struct	s_player
 
 typedef struct	s_map
 {
-  int	**map;
+  int	map[100];
 
 }		t_map;
 

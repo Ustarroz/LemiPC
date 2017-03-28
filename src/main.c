@@ -1,15 +1,17 @@
-/*
+i/*
 ** main.c for Project-Master in /Users/robinustarroz/rendu/systeme_unix
 **
 ** Made by ustarr_r
 ** Login   <ustarr_r@epitech.eu>
 **
 ** Started on  Fri Mar 24 16:27:20 2017 ustarr_r
-** Last update Sat Mar 25 19:23:41 2017 Vagrant Default User
+** Last update Sun Mar 26 01:29:51 2017 Vagrant Default User
 */
 #include <stdio.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <stdlib.h>
+
 
 void	destroy_shared_map(int shm_id)
 {
@@ -48,7 +50,6 @@ int	main(int ac, char **av)
     {
       if ((player = init_player(av[1], av[3])) == NULL)
 	return (84);
-
     }
   else
     fprintf(stderr, "Wrong usage, expected: [path_to_key] [team_number]");
