@@ -5,10 +5,14 @@
 ** Login   <ustarr_r@epitech.eu>
 **
 ** Started on  Fri Mar 24 16:52:28 2017 ustarr_r
-// Last update Sat Mar 25 14:57:08 2017 Vagrant Default User
+** Last update Tue Mar 28 10:31:13 2017 Edouard
 */
 #ifndef GAME_H_
 # define GAME_H_
+
+#define COLUMN_NB 10
+#define LINE_NB 10
+#define POS(x,y) ((x) + (y) * COLUMN_NB)
 
 typedef struct	s_player
 {
