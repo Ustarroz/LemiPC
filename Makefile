@@ -5,14 +5,14 @@
 ## Login   <ustarr_r@epitech.eu>
 ## 
 ## Started on  Sat Mar 25 11:43:14 2017 ustarr_r
-## Last update Sat Mar 25 11:45:30 2017 ustarr_r
+## Last update Tue Mar 28 10:32:35 2017 Edouard
 ####
 
 CC	= gcc
 
 RM	= rm -f
 
-CFLAGS	+= -W -Wall -Wextra -Werror
+CFLAGS	= -W -Wall -Wextra -Werror
 
 NAME	= lemipc
 
