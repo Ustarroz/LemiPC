@@ -5,10 +5,15 @@
 ** Login   <ustarr_r@epitech.eu>
 **
 ** Started on  Fri Mar 24 16:52:28 2017 ustarr_r
-// Last update Sun Mar 26 02:32:57 2017 Vagrant Default User
+// Last update Wed Mar 29 14:53:09 2017 Vagrant Default User
 */
 #ifndef GAME_H_
 # define GAME_H_
+
+#define COLUMN_NB 10
+#define LINE_NB 10
+#define MAP_SIZE size(int) * COLUMN_NB * LINE_NB + 8
+#define POS(x,y) ((x) + (y) * COLUMN_NB)
 
 typedef struct	s_player
 {
@@ -18,13 +23,20 @@ typedef struct	s_player
   int	posX;
   int	posY;
   int	shmID;
+  bool	first;
 }		t_player;
 
-typedef struct	s_map
+enum sem_type
+  {
+    MAP = 0,
+    PRINT,
+    PLAYER
+  };
+
+typedef struc	s_map
 {
-  int	map[100];
-
+  int	*map;
+  int	teams;
 }		t_map;
-
 
 #endif /*!GAME_H_*/
