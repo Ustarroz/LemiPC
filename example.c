@@ -19,6 +19,7 @@ int	main(int ac, char **av)
       return (1);
     }
   key = ftok(av[1], 1);
+  printf("key %d\n", key);
   shm_id = shmget(key, 42, SHM_R | SHM_W);
   if (shm_id == -1)
     {
