@@ -5,7 +5,7 @@
 ## Login   <ustarr_r@epitech.eu>
 ## 
 ## Started on  Sat Mar 25 11:43:14 2017 ustarr_r
-## Last update Tue Mar 28 10:32:35 2017 Edouard
+## Last update Thu Mar 30 13:15:44 2017 Vagrant Default User
 ####
 
 CC	= gcc
@@ -14,6 +14,8 @@ RM	= rm -f
 
 CFLAGS	= -W -Wall -Wextra -Werror
 
+CFLAGS = Iinclude
+
 NAME	= lemipc
 
 SRC	= src/main.c
@@ -21,7 +23,7 @@ SRC	= src/main.c
 OBJ	= $(SRC:.c=.o)
 
 $(NAME): $(OBJ)
-	$(CC) -o $(NAME) $(OBJ) $(CLAGS)
+	$(CC) -o $(NAME) $(OBJ) $(CFLAGS)
 
 all: $(NAME)
 
