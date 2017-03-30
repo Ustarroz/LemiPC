@@ -5,29 +5,32 @@
 ** Login   <ustarr_r@epitech.eu>
 **
 ** Started on  Fri Mar 24 16:27:20 2017 ustarr_r
-** Last update Thu Mar 30 17:18:51 2017 Edouard
+** Last update Thu Mar 30 23:19:52 2017 Edouard
 */
+
 #include <stdio.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include "game.h"
+#include "id_manager.h"
 
 void	create_semaphore(t_player *tmp)
 {
   tmp->semID = semget(tmp->key, 3, IPC_CREAT | SHM_R | SHM_W);
   semctl(tmp->semID, MAP, SETVAL, 1);
-  semctl(tmp->semID, PRINT, SETVAL, 0);
-  semctl(tmp->semID, START, SETVAL, 1);
+  semctl(tmp->semID, PRINT, SETVAL, 1);
+  semctl(tmp->semID, START, SETVAL, 0);
 }
 
 int	*init_map(t_player *tmp)
 {
-  int	i = -1;
+  int	i;
 
+  i = -1;
   tmp->map = shmat(tmp->shmID, NULL, SHM_R | SHM_W);
-  while (++i != MAP_SIZE)
+  while (++i < MAP_SIZE)
     tmp->map[i] = 0;
   tmp->map[MAP_SIZE] = 0;
   return (tmp->map);
@@ -72,6 +75,7 @@ int	main(int ac, char **av)
       srand(time(NULL));
       if ((player = init_player(av[1], av[2], &print)) == NULL)
 	return (-1);
+      start_token(player);
       if (player->first == true)
 	pthread_join(print, NULL);
     }

@@ -5,11 +5,12 @@
 ** Login   <vagrant@epitech.net>
 **
 ** Started on  Thu Mar 30 13:01:25 2017 Vagrant Default User
-** Last update Thu Mar 30 13:05:46 2017 Vagrant Default User
+** Last update Thu Mar 30 23:24:25 2017 Edouard
 */
 #include <stdio.h>
 #include <sys/shm.h>
 #include <id_manager.h>
+#include <unistd.h>
 #include "game.h"
 
 void    destroy_shared_map(t_player *tmp)
@@ -26,7 +27,7 @@ int     count_teams(int *map)
   int   save;
 
   j = -1;
-  while (map[++j])
+  while (++j < MAP_SIZE)
     {
       if (map[j] != 0)
 	save = map[j];
@@ -41,9 +42,9 @@ void    print_game(int *map)
   int   i;
 
   i = -1;
-  while (map[++i])
+  while (++i < MAP_SIZE)
     {
-      if (i % 10 != 0)
+      if (i % COLUMN_NB != COLUMN_NB - 1)
 	printf("%d ", map[i]);
       else
 	printf("%d\n", map[i]);
@@ -58,7 +59,7 @@ int     count_players(int *map)
 
   i = -1;
   count = 0;
-  while (map[++i])
+  while (++i < MAP_SIZE)
     {
       if (map[i] != 0)
 	count++;
@@ -73,29 +74,35 @@ void    *print_the_game(t_player *tmp)
   bool	end;
 
   end = false;
+  printf("start team\n");
   while (!end)
     {
       set_sem(tmp->semID, PRINT, 0);
+      usleep(100);
+      printf("go go print\n");
       set_sem(tmp->semID, MAP, -1);
+      printf("go go map\n");
       nb_teams = count_teams(tmp->map);
       nb_player = count_players(tmp->map);
       print_game(tmp->map);
       if (tmp->map[MAP_SIZE] == 0)
 	{
-	  if (nb_teams >= 2)
+	  if (nb_teams == 1)
 	    {
+	      printf("start game\n");
 	      tmp->map[MAP_SIZE] = 1;
 	      set_sem(tmp->semID, START, nb_player);
 	      set_sem(tmp->semID, PRINT, nb_player);
 	    }
 	  else
 	    {
+	      printf("not start game\n");
 	      set_sem(tmp->semID, PRINT, 1);
 	    }
 	}
       else
 	{
-	  if (nb_teams == 1)
+	  if (nb_teams == 0)
 	    {
 	      tmp->map[MAP_SIZE] = 2;
 	      set_sem(tmp->semID, PRINT, nb_player);

@@ -76,6 +76,7 @@ static void	cycle_token(t_player *player)
 {
   while (1)
     {
+      set_sem(player->semID, PRINT, -1);
       set_sem(player->semID, MAP, -1);
       if (player->map[COLUMN_NB * LINE_NB] == 2 ||
 	  check_dead(player->map, player->posX, player->posY, player->team_id))
@@ -85,7 +86,6 @@ static void	cycle_token(t_player *player)
 	  break;
 	}
       move_player(player);
-      set_sem(player->semID, PRINT, -1);
       set_sem(player->semID, MAP, 1);
       usleep(100);
     }
@@ -93,10 +93,13 @@ static void	cycle_token(t_player *player)
 
 void	start_token(t_player *player)
 {
+  set_sem(player->semID, PRINT, -1);
   set_sem(player->semID, MAP, -1);
   if (!set_first_pos(player))
-    return ;
-  set_sem(player->semID, PRINT, -1);
+    {
+      set_sem(player->semID, MAP, 1);
+      return ;
+    }
   if (player->map[COLUMN_NB * LINE_NB] == 0)
     {
       set_sem(player->semID, MAP, 1);
