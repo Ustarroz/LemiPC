@@ -5,7 +5,7 @@
 ** Login   <ustarr_r@epitech.eu>
 **
 ** Started on  Fri Mar 24 16:27:20 2017 ustarr_r
-** Last update Thu Mar 30 13:08:50 2017 Vagrant Default User
+** Last update Thu Mar 30 17:18:51 2017 Edouard
 */
 #include <stdio.h>
 #include <sys/ipc.h>
@@ -67,15 +67,16 @@ int	main(int ac, char **av)
   t_player	*player;
   pthread_t	print;
 
-  if (ac != 3)
+  if (ac == 3)
     {
       srand(time(NULL));
-      if ((player = init_player(av[1], av[3], &print)) == NULL)
+      if ((player = init_player(av[1], av[2], &print)) == NULL)
 	return (-1);
       if (player->first == true)
 	pthread_join(print, NULL);
     }
   else
-    fprintf(stderr, "Wrong usage, expected: [path_to_key] [team_number]");
+    fprintf(stderr, "Wrong usage, expected: %s [path_to_key] [team_number]\n",
+	    av[0]);
   return (0);
 }
