@@ -5,7 +5,7 @@
 ** Login   <ustarr_r@epitech.eu>
 **
 ** Started on  Fri Mar 24 16:52:28 2017 ustarr_r
-** Last update Wed Mar 29 21:19:48 2017 Edouard
+** Last update Thu Mar 30 17:22:30 2017 Edouard
 */
 
 #ifndef GAME_H_
@@ -13,10 +13,12 @@
 
 #include <sys/types.h>
 #include <stdbool.h>
+#include <sys/sem.h>
 
 #define COLUMN_NB 10
 #define LINE_NB 10
-#define MAP_SIZE size(int) * COLUMN_NB * LINE_NB + 8
+#define MAP_SIZE COLUMN_NB * LINE_NB
+#define MEM_SIZE (MAP_SIZE + 1) * sizeof(int)
 #define POS(x,y) ((x) + (y) * COLUMN_NB)
 #define POSX(i) ((i) % COLUMN_NB)
 #define POSY(i) ((i) / COLUMN_NB)
@@ -37,7 +39,19 @@ enum sem_type
   {
     MAP = 0,
     PRINT,
-    PLAYER
+    START
   };
+
+void		create_semaphore(t_player *tmp);
+int		*init_map(t_player *tmp);
+t_player        *init_player(char *key_path,
+			     char *team_number,
+			     pthread_t *print);
+struct sembuf	*set_sops(int semID, int num, int flags, int operation);
+void		destroy_shared_map(t_player *tmp);
+int		count_teams(int *map);
+void		print_game(int *map);
+int		count_players(int *map);
+void		*print_the_game(t_player *tmp);
 
 #endif /*!GAME_H_*/
