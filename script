@@ -5,6 +5,6 @@ for ((x=1; i <= 9; ++x))
 do
     for ((y=1; i <= 9; ++y))
     do
-	./lemipc .. $x;
+	./lemipc . $x;
     done
 done
