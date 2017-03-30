@@ -5,7 +5,7 @@
 ## Login   <ustarr_r@epitech.eu>
 ## 
 ## Started on  Sat Mar 25 11:43:14 2017 ustarr_r
-## Last update Tue Mar 28 10:32:35 2017 Edouard
+## Last update Thu Mar 30 17:16:36 2017 Edouard
 ####
 
 CC	= gcc
@@ -13,10 +13,14 @@ CC	= gcc
 RM	= rm -f
 
 CFLAGS	= -W -Wall -Wextra -Werror
+CFLAGS	+= -Iinclude
 
 NAME	= lemipc
 
-SRC	= src/main.c
+SRC	= src/main.c \
+	  src/id_manager.c \
+	  src/mov_management.c \
+	  src/token_management.c
 
 OBJ	= $(SRC:.c=.o)
 
