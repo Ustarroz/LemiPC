@@ -5,7 +5,7 @@
 ** Login   <ustarr_r@epitech.eu>
 **
 ** Started on  Fri Mar 24 16:52:28 2017 ustarr_r
-** Last update Fri Mar 31 21:04:19 2017 Edouard
+** Last update Fri Mar 31 23:30:43 2017 Edouard
 */
 
 #ifndef GAME_H_
@@ -19,7 +19,7 @@
 #define LINE_NB 10
 #define MAP_SIZE COLUMN_NB * LINE_NB
 #define MEM_SIZE (MAP_SIZE + 1) * sizeof(int)
-#define POS(x,y) ((x) + (y) * COLUMN_NB)
+#define POS(x, y) ((x) + (y) * COLUMN_NB)
 #define POSX(i) ((i) % COLUMN_NB)
 #define POSY(i) ((i) / COLUMN_NB)
 #define TIME_SLEEP 300000
