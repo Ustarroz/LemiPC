@@ -5,7 +5,7 @@
 ** Login   <vagrant@epitech.net>
 **
 ** Started on  Thu Mar 30 13:01:25 2017 Vagrant Default User
-** Last update Fri Mar 31 12:07:52 2017 Vagrant Default User
+** Last update Fri Mar 31 14:46:55 2017 ustarr_r
 */
 #include <stdio.h>
 #include <sys/shm.h>
@@ -27,9 +27,10 @@ int     count_teams(int *map)
   int   save;
 
   j = -1;
+  save = -1;
   while (++j < MAP_SIZE)
     {
-      if (map[j] != 0)
+      if (map[j] != 0 && save == -1)
 	save = map[j];
       if (map[j] != 0 && map[j] != save)
 	return (1);
@@ -42,6 +43,7 @@ void    print_game(int *map)
   int   i;
 
   i = -1;
+  printf("\033[2J");
   while (++i < MAP_SIZE)
     {
       if (i % COLUMN_NB != COLUMN_NB - 1)
@@ -74,15 +76,12 @@ void    *print_the_game(t_player *tmp)
   bool	end;
 
   end = false;
-  printf("start team\n");
   while (!end)
     {
       printf("print to 0 \n");
       set_sem(tmp->semID, PRINT, 0);
       usleep(100);
-      printf("go go print\n");
       set_sem(tmp->semID, MAP, -1);
-      printf("go go map\n");
       nb_teams = count_teams(tmp->map);
       nb_player = count_players(tmp->map);
       print_game(tmp->map);
@@ -90,7 +89,6 @@ void    *print_the_game(t_player *tmp)
 	{
 	  if (nb_teams == 1)
 	    {
-	      printf("start game\n");
 	      tmp->map[MAP_SIZE] = 1;
 	      set_sem(tmp->semID, START, nb_player);
 	      set_sem(tmp->semID, PRINT, nb_player);
