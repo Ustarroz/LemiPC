@@ -5,7 +5,7 @@
 ** Login   <ustarr_r@epitech.eu>
 **
 ** Started on  Fri Mar 24 16:27:20 2017 ustarr_r
-** Last update Fri Mar 31 11:29:59 2017 Vagrant Default User
+** Last update Fri Mar 31 14:44:38 2017 ustarr_r
 */
 
 #include <stdio.h>
@@ -61,7 +61,10 @@ t_player	*init_player(char *key_path, char *team_number, pthread_t *print)
       tmp->first = true;
     }
   else
-    tmp->map = shmat(tmp->shmID, NULL, SHM_R | SHM_W);
+    {
+      tmp->map = shmat(tmp->shmID, NULL, SHM_R | SHM_W);
+      tmp->semID = semget(tmp->key, 3, IPC_CREAT | SHM_R | SHM_W);
+    }
   return (tmp);
 }
 
@@ -69,7 +72,7 @@ int	main(int ac, char **av)
 {
   t_player	*player;
   pthread_t	print;
-
+  
   if (ac == 3)
     {
       srand(time(NULL));
