@@ -5,116 +5,94 @@
 ** Login   <vagrant@epitech.net>
 **
 ** Started on  Thu Mar 30 13:01:25 2017 Vagrant Default User
-** Last update Fri Mar 31 16:07:10 2017 Edouard
+** Last update Fri Mar 31 22:57:53 2017 Edouard
 */
 
 #include <stdio.h>
-#include <sys/shm.h>
 #include <id_manager.h>
 #include <unistd.h>
+#include "listteam.h"
+#include "id_manager.h"
+#include "manage_team.h"
 #include "game.h"
 
-void    destroy_shared_map(t_player *tmp)
+static void	set_color(char *color[NB_COLOR])
 {
-  shmctl(tmp->shmID, IPC_RMID, NULL);
-  semctl(tmp->semID, START, IPC_RMID);
-  semctl(tmp->semID, PRINT, IPC_RMID);
-  semctl(tmp->semID, MAP, IPC_RMID);
+  color[RED] = STR_RED;
+  color[GREEN] = STR_GREEN;
+  color[YELLOW] = STR_YELLOW;
+  color[BLUE] = STR_BLUE;
+  color[PURPLE] = STR_PURPLE;
+  color[CYAN] = STR_CYAN;
+  color[WHITE] = STR_WHITE;
+  color[BLACK_BOLD] = STR_BLACK_BOLD;
+  color[RED_BOLD] = STR_RED_BOLD;
+  color[GREEN_BOLD] = STR_GREEN_BOLD;
+  color[YELLOW_BOLD] = STR_YELLOW_BOLD;
+  color[BLUE_BOLD] = STR_BLUE_BOLD;
+  color[PURPLE_BOLD] = STR_PURPLE_BOLD;
+  color[CYAN_BOLD] = STR_CYAN_BOLD;
+  color[WHITE_BOLD] = STR_WHITE_BOLD;
 }
 
-int     count_teams(int *map)
+bool		end_of_the_game(t_player *player, int nb_player)
 {
-  int   j;
-  int   save;
-
-  j = -1;
-  save = -1;
-  while (++j < MAP_SIZE)
-    {
-      if (map[j] != 0 && save == -1)
-	save = map[j];
-      if (map[j] != 0 && map[j] != save)
-	return (1);
-    }
-  return (0);
+  player->map[MAP_SIZE] = 2;
+  set_sem(player->semID, PRINT, nb_player);
+  return (true);
 }
 
-void    print_game(int *map)
+bool		set_after_print(t_player *player, int nb_player, int nb_teams)
 {
-  int   i;
+  bool		end;
 
-  i = -1;
-  printf("\033[2J");
-  while (++i < MAP_SIZE)
+  if (nb_teams == 0)
+    return (true);
+  end = false;
+  if (player->map[MAP_SIZE] == 0)
     {
-      if (i % COLUMN_NB != COLUMN_NB - 1)
-	printf("%d ", map[i]);
+      if (nb_teams > 1)
+	{
+	  player->map[MAP_SIZE] = 1;
+	  set_sem(player->semID, START, nb_player);
+	  set_sem(player->semID, PRINT, nb_player);
+	}
       else
-	printf("%d\n", map[i]);
+	set_sem(player->semID, PRINT, 1);
     }
-  printf("\n\n");
-}
-
-int     count_players(int *map)
-{
-  int   i;
-  int   count;
-
-  i = -1;
-  count = 0;
-  while (++i < MAP_SIZE)
+  else if (player->map[MAP_SIZE] == 1)
     {
-      if (map[i] != 0)
-	count++;
+      if (nb_teams <= 1)
+	end = end_of_the_game(player, nb_player);
+      else
+	set_sem(player->semID, PRINT, nb_player);
     }
-  return (count);
+  return (end);
 }
 
-void    *print_the_game(t_player *tmp)
+void		*print_the_game(t_player *tmp)
 {
-  int   nb_teams;
-  int   nb_player;
-  bool	end;
+  int		nb_teams;
+  int		nb_player;
+  bool		end;
+  char		*color[NB_COLOR];
+  t_listteam	*list;
 
   end = false;
+  set_color(color);
+  list = NULL;
   while (!end)
     {
-      printf("print to 0 \n");
       set_sem(tmp->semID, PRINT, 0);
       usleep(100);
       set_sem(tmp->semID, MAP, -1);
-      nb_teams = count_teams(tmp->map);
       nb_player = count_players(tmp->map);
-      print_game(tmp->map);
-      if (tmp->map[MAP_SIZE] == 0)
-	{
-	  if (nb_teams == 1)
-	    {
-	      tmp->map[MAP_SIZE] = 1;
-	      set_sem(tmp->semID, START, nb_player);
-	      set_sem(tmp->semID, PRINT, nb_player);
-	    }
-	  else
-	    {
-	      printf("Print goes to 1 \n");
-	      set_sem(tmp->semID, PRINT, 1);
-	    }
-	}
-      else
-	{
-	  if (nb_teams == 0)
-	    {
-	      tmp->map[MAP_SIZE] = 2;
-	      set_sem(tmp->semID, PRINT, nb_player);
-	      end = true;
-	    }
-	  else
-	    set_sem(tmp->semID, PRINT, nb_player);
-	}
+      list = print_map(tmp->map, list, color);
+      nb_teams = count_clear_teams(&list);
+      end = set_after_print(tmp, nb_player, nb_teams);
       set_sem(tmp->semID, MAP, 1);
     }
   set_sem(tmp->semID, PRINT, 0);
-  printf("End of the game\n");
   destroy_shared_map(tmp);
   return (NULL);
 }

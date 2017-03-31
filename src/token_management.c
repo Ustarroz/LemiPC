@@ -1,3 +1,13 @@
+/*
+** token_management.c for lemipc in edouard/Documents/concur/PSU_2016_lemipc
+**
+** Made by Edouard
+** Login   <edouard@epitech.net>
+**
+** Started on  Fri Mar 31 22:59:39 2017 Edouard
+** Last update Fri Mar 31 23:14:18 2017 Edouard
+*/
+
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
@@ -19,16 +29,15 @@ static bool	check_dead(int *map, int posx, int posy, int self_id)
     sum[2] = map[POS(posx + 1, posy)];
   if (posy != LINE_NB - 1)
     sum[3] = map[POS(posx, posy + 1)];
-  for (i = 0; i != 4; i++)
-    {
-      if (sum[i] == 0 || sum[i] == self_id)
-	continue ;
-      for (j = i + 1; j != 4; j++)
-	if (sum[j] == 0 || sum[i] == self_id)
-	  continue ;
-	else if (sum[i] == sum[j])
-	  return (true);
-    }
+  i = -1;
+  while (++i < 4)
+    if (sum[i] != 0 && sum[i] != self_id)
+      {
+	j = i;
+	while (++j < 4)
+	  if (sum[i] == sum[j])
+	    return (true);
+      }
   return (false);
 }
 
@@ -83,7 +92,7 @@ static void	cycle_token(t_player *player)
 	{
 	  player->map[POS(player->posX, player->posY)] = 0;
 	  set_sem(player->semID, MAP, 1);
-	  break;
+	  break ;
 	}
       move_player(player);
       set_sem(player->semID, MAP, 1);

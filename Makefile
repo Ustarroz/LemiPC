@@ -5,7 +5,7 @@
 ## Login   <ustarr_r@epitech.eu>
 ## 
 ## Started on  Sat Mar 25 11:43:14 2017 ustarr_r
-## Last update Thu Mar 30 18:04:39 2017 Edouard
+## Last update Fri Mar 31 22:26:29 2017 Edouard
 ####
 
 CC	= gcc
@@ -22,7 +22,9 @@ SRC	= src/main.c \
 	  src/id_manager.c \
 	  src/mov_management.c \
 	  src/token_management.c \
-	  src/fct_print.c
+	  src/fct_print.c \
+	  src/listteam.c \
+	  src/manage_team.c
 
 OBJ	= $(SRC:.c=.o)
 

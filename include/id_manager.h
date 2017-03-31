@@ -7,5 +7,8 @@
 int	set_sem(int sem_id, unsigned short sem_num, short sem_op);
 void	start_token(t_player *player);
 bool	set_first_pos(t_player *player);
+int	set_sem(int sem_id,
+		unsigned short sem_num,
+		short sem_op);
 
 #endif /* !ID_MANAGER_H_ */

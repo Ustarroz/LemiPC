@@ -5,7 +5,7 @@
 ** Login   <ustarr_r@epitech.eu>
 **
 ** Started on  Fri Mar 24 16:27:20 2017 ustarr_r
-** Last update Fri Mar 31 16:07:24 2017 Edouard
+** Last update Fri Mar 31 22:59:02 2017 Edouard
 */
 
 #include <stdio.h>
@@ -45,7 +45,8 @@ bool	create_first_thread(t_player *tmp, pthread_t *print)
   semctl(tmp->semID, MAP, SETVAL, 1);
   semctl(tmp->semID, PRINT, SETVAL, 1);
   semctl(tmp->semID, START, SETVAL, 0);
-  if (pthread_create(print, NULL, (void * (*)(void*))&print_the_game, tmp) != 0)
+  if (pthread_create(print, NULL,
+		     (void * (*)(void*))&print_the_game, tmp) != 0)
     {
       destroy_shared_map(tmp);
       return (false);
@@ -114,7 +115,6 @@ int	main(int ac, char **av)
       srand(time(NULL));
       if ((player = init_player(av[1], av[2], &print)) == NULL)
 	return (-1);
-      printf("got to start token\n");
       start_token(player);
       if (player->first == true)
 	pthread_join(print, NULL);

@@ -5,7 +5,7 @@
 ** Login   <ustarr_r@epitech.eu>
 **
 ** Started on  Fri Mar 24 16:52:28 2017 ustarr_r
-** Last update Thu Mar 30 17:22:30 2017 Edouard
+** Last update Fri Mar 31 21:04:19 2017 Edouard
 */
 
 #ifndef GAME_H_
@@ -34,7 +34,7 @@ typedef struct	s_player
   int		shmID;
   bool		first;
   int		*map;
- }		t_player;
+}		t_player;
 
 enum sem_type
   {
@@ -47,7 +47,6 @@ t_player        *init_player(char *key_path,
 			     char *team_number,
 			     pthread_t *print);
 void		destroy_shared_map(t_player *tmp);
-int		count_teams(int *map);
 void		print_game(int *map);
 int		count_players(int *map);
 void		*print_the_game(t_player *tmp);

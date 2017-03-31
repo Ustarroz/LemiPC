@@ -1,3 +1,13 @@
+/*
+** mov_management.c for lemipc in /home/edouard/Documents/concur/PSU_2016_lemipc
+**
+** Made by Edouard
+** Login   <edouard@epitech.net>
+**
+** Started on  Fri Mar 31 22:59:29 2017 Edouard
+** Last update Fri Mar 31 23:13:38 2017 Edouard
+*/
+
 #include <stdlib.h>
 #include "game.h"
 
@@ -30,18 +40,16 @@ static bool	check_pos_id(t_player *player, int pos)
   int		posX;
   int		posY;
 
-  for (posX = POSX(pos) - 1; posX != POSX(pos) + 2; ++posX)
-    {
-      if (posX < 0 || posX >= COLUMN_NB)
-	continue ;
-      for (posY = POSY(pos) - 1; posY != POSY(pos) + 2; ++posY)
-	{
-	  if (posY < 0 || posY >= LINE_NB)
-	    continue ;
-	  if (player->map[POS(posX, posY)] == player->team_id)
+  posX = POSX(pos) - 2;
+  while (++posX < POSX(pos) + 2)
+    if (posX >= 0 && posX < COLUMN_NB)
+      {
+	posY = POSY(pos) - 2;
+	while (++posY < POSY(pos) + 2)
+	  if (posY >= 0 && posY < LINE_NB &&
+	      player->map[POS(posX, posY)] == player->team_id)
 	    return (true);
-	}
-    }
+      }
   return (false);
 }
 
