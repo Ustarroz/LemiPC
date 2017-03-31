@@ -3,7 +3,7 @@
 
 int		set_sem(int sem_id,
 			unsigned short sem_num,
-			short sem_op)
+		        short sem_op)
 {
   struct sembuf sops;
 

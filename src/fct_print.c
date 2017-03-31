@@ -5,8 +5,9 @@
 ** Login   <vagrant@epitech.net>
 **
 ** Started on  Thu Mar 30 13:01:25 2017 Vagrant Default User
-** Last update Fri Mar 31 16:03:21 2017 Edouard
+** Last update Fri Mar 31 16:07:10 2017 Edouard
 */
+
 #include <stdio.h>
 #include <sys/shm.h>
 #include <id_manager.h>
@@ -78,6 +79,7 @@ void    *print_the_game(t_player *tmp)
   end = false;
   while (!end)
     {
+      printf("print to 0 \n");
       set_sem(tmp->semID, PRINT, 0);
       usleep(100);
       set_sem(tmp->semID, MAP, -1);
@@ -94,6 +96,7 @@ void    *print_the_game(t_player *tmp)
 	    }
 	  else
 	    {
+	      printf("Print goes to 1 \n");
 	      set_sem(tmp->semID, PRINT, 1);
 	    }
 	}
@@ -111,6 +114,7 @@ void    *print_the_game(t_player *tmp)
       set_sem(tmp->semID, MAP, 1);
     }
   set_sem(tmp->semID, PRINT, 0);
+  printf("End of the game\n");
   destroy_shared_map(tmp);
   return (NULL);
 }
