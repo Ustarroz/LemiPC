@@ -5,7 +5,7 @@
 ** Login   <ustarr_r@epitech.eu>
 **
 ** Started on  Fri Mar 24 16:27:20 2017 ustarr_r
-** Last update Fri Mar 31 14:07:50 2017 Edouard
+** Last update Fri Mar 31 15:22:23 2017 Edouard
 */
 
 #include <stdio.h>
@@ -16,27 +16,45 @@
 #include "game.h"
 #include "id_manager.h"
 
-void	create_semaphore(t_player *tmp)
-{
-  tmp->semID = semget(tmp->key, 3, IPC_CREAT | SHM_R | SHM_W);
-  semctl(tmp->semID, MAP, SETVAL, 1);
-  semctl(tmp->semID, PRINT, SETVAL, 1);
-  semctl(tmp->semID, START, SETVAL, 0);
-}
-
-int	*init_map(t_player *tmp)
+void	init_map(int *map)
 {
   int	i;
 
   i = -1;
-  tmp->map = shmat(tmp->shmID, NULL, SHM_R | SHM_W);
   while (++i < MAP_SIZE)
-    tmp->map[i] = 0;
-  tmp->map[MAP_SIZE] = 0;
-  return (tmp->map);
+    map[i] = 0;
+  map[MAP_SIZE] = 0;
 }
 
-t_player	*init_player(char *key_path, char *team_number, pthread_t *print)
+bool	create_first_thread(t_player *tmp, pthread_t *print)
+{
+  if ((tmp->shmID = shmget(tmp->key, MEM_SIZE, IPC_CREAT | SHM_R | SHM_W))
+      == -1)
+    return (false);
+  if ((tmp->map = shmat(tmp->shmID, NULL, SHM_R | SHM_W)) == NULL)
+    {
+      shmctl(tmp->shmID, IPC_RMID, NULL);
+      return (false);
+    }
+  init_map(tmp->map);
+  if ((tmp->semID = semget(tmp->key, 3, IPC_CREAT | SHM_R | SHM_W)) == -1)
+    {
+      shmctl(tmp->shmID, IPC_RMID, NULL);
+      return (false);
+    }
+  semctl(tmp->semID, MAP, SETVAL, 1);
+  semctl(tmp->semID, PRINT, SETVAL, 1);
+  semctl(tmp->semID, START, SETVAL, 0);
+  if (pthread_create(print, NULL, (void * (*)(void*))&print_the_game, tmp) != 0)
+    {
+      destroy_shared_map(tmp);
+      return (false);
+    }
+  tmp->first = true;
+  return (true);
+}
+
+t_player	*check_and_init(char *key_path, char *team_number)
 {
   t_player	*tmp;
 
@@ -45,25 +63,43 @@ t_player	*init_player(char *key_path, char *team_number, pthread_t *print)
       fprintf(stderr, "Malloc Error\n");
       return (NULL);
     }
-  tmp->team_id = atoi(team_number);
+  if ((tmp->team_id = atoi(team_number)) <= 0)
+    {
+      fprintf(stderr, "Wrong team\n");
+      return (NULL);
+    }
   if ((tmp->key = ftok(key_path, 0)) == -1)
     {
-      fprintf(stderr, "Wrong path");
+      fprintf(stderr, "Wrong path\n");
       return (NULL);
     }
   tmp->first = false;
+  return (tmp);
+}
+
+t_player	*init_player(char *key_path, char *team_number, pthread_t *print)
+{
+  t_player	*tmp;
+
+  if ((tmp = check_and_init(key_path, team_number)) == NULL)
+    return (NULL);
   if ((tmp->shmID = shmget(tmp->key, MEM_SIZE, SHM_R | SHM_W)) == -1)
     {
-      tmp->shmID = shmget(tmp->key, MEM_SIZE, IPC_CREAT | SHM_R | SHM_W);
-      create_semaphore(tmp);
-      init_map(tmp);
-      pthread_create(print, NULL, (void * (*)(void*))&print_the_game, tmp);
-      tmp->first = true;
+      if (create_first_thread(tmp, print) == false)
+	{
+	  fprintf(stderr, "Can't start the first thread\n");
+	  return (NULL);
+	}
     }
-  else
+  else if ((tmp->map = shmat(tmp->shmID, NULL, SHM_R | SHM_W)) == NULL)
     {
-      tmp->map = shmat(tmp->shmID, NULL, SHM_R | SHM_W);
-      tmp->semID = semget(tmp->key, 3, IPC_CREAT | SHM_R | SHM_W);
+      fprintf(stderr, "Can't get shared memory\n");
+      return (NULL);
+    }
+  else if ((tmp->semID = semget(tmp->key, 3, IPC_CREAT | SHM_R | SHM_W)) == -1)
+    {
+      fprintf(stderr, "Can't get semaphore\n");
+      return (NULL);
     }
   return (tmp);
 }

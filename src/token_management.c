@@ -87,7 +87,7 @@ static void	cycle_token(t_player *player)
 	}
       move_player(player);
       set_sem(player->semID, MAP, 1);
-      usleep(100);
+      usleep(TIME_SLEEP);
     }
 }
 
@@ -107,6 +107,6 @@ void	start_token(t_player *player)
     }
   else
     set_sem(player->semID, MAP, 1);
-  usleep(100);
+  usleep(TIME_SLEEP);
   cycle_token(player);
 }

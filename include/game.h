@@ -22,6 +22,7 @@
 #define POS(x,y) ((x) + (y) * COLUMN_NB)
 #define POSX(i) ((i) % COLUMN_NB)
 #define POSY(i) ((i) / COLUMN_NB)
+#define TIME_SLEEP 300000
 
 typedef struct	s_player
 {
@@ -42,16 +43,14 @@ enum sem_type
     START
   };
 
-void		create_semaphore(t_player *tmp);
-int		*init_map(t_player *tmp);
 t_player        *init_player(char *key_path,
 			     char *team_number,
 			     pthread_t *print);
-struct sembuf	*set_sops(int semID, int num, int flags, int operation);
 void		destroy_shared_map(t_player *tmp);
 int		count_teams(int *map);
 void		print_game(int *map);
 int		count_players(int *map);
 void		*print_the_game(t_player *tmp);
+void		destroy_shared_map(t_player *tmp);
 
 #endif /*!GAME_H_*/

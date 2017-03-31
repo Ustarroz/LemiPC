@@ -5,7 +5,7 @@
 ** Login   <vagrant@epitech.net>
 **
 ** Started on  Thu Mar 30 13:01:25 2017 Vagrant Default User
-** Last update Fri Mar 31 14:35:45 2017 Edouard
+** Last update Fri Mar 31 16:03:21 2017 Edouard
 */
 #include <stdio.h>
 #include <sys/shm.h>
