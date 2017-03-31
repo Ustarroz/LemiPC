@@ -81,7 +81,7 @@ static void	cycle_token(t_player *player)
       if (player->map[COLUMN_NB * LINE_NB] == 2 ||
 	  check_dead(player->map, player->posX, player->posY, player->team_id))
 	{
-	  set_sem(player->semID, PRINT, -1);
+	  player->map[POS(player->posX, player->posY)] = 0;
 	  set_sem(player->semID, MAP, 1);
 	  break;
 	}
@@ -91,13 +91,10 @@ static void	cycle_token(t_player *player)
     }
 }
 
-#include <stdio.h>
 void	start_token(t_player *player)
 {
-  printf("start token for team %d\n", player->team_id);
   set_sem(player->semID, PRINT, -1);
   set_sem(player->semID, MAP, -1);
-  printf("setting first pos %d\n", player->team_id);
   if (!set_first_pos(player))
     {
       set_sem(player->semID, MAP, 1);
@@ -105,9 +102,7 @@ void	start_token(t_player *player)
     }
   if (player->map[COLUMN_NB * LINE_NB] == 0)
     {
-      printf("releasing map %d\n", player->team_id);
       set_sem(player->semID, MAP, 1);
-      printf("waiting start %d\n", player->team_id);
       set_sem(player->semID, START, -1);
     }
   else
