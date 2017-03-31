@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "game.h"
 
-int	set_sem(int sem_id, int sem_num, int sem_op);
+int	set_sem(int sem_id, unsigned short sem_num, short sem_op);
 void	start_token(t_player *player);
 bool	set_first_pos(t_player *player);
 
