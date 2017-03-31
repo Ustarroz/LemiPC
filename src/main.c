@@ -5,7 +5,7 @@
 ** Login   <ustarr_r@epitech.eu>
 **
 ** Started on  Fri Mar 24 16:27:20 2017 ustarr_r
-** Last update Thu Mar 30 23:19:52 2017 Edouard
+** Last update Fri Mar 31 11:29:59 2017 Vagrant Default User
 */
 
 #include <stdio.h>
@@ -75,6 +75,7 @@ int	main(int ac, char **av)
       srand(time(NULL));
       if ((player = init_player(av[1], av[2], &print)) == NULL)
 	return (-1);
+      printf("got to start token\n");
       start_token(player);
       if (player->first == true)
 	pthread_join(print, NULL);

@@ -5,7 +5,7 @@
 ** Login   <vagrant@epitech.net>
 **
 ** Started on  Thu Mar 30 13:01:25 2017 Vagrant Default User
-** Last update Thu Mar 30 23:24:25 2017 Edouard
+** Last update Fri Mar 31 12:07:52 2017 Vagrant Default User
 */
 #include <stdio.h>
 #include <sys/shm.h>
@@ -77,6 +77,7 @@ void    *print_the_game(t_player *tmp)
   printf("start team\n");
   while (!end)
     {
+      printf("print to 0 \n");
       set_sem(tmp->semID, PRINT, 0);
       usleep(100);
       printf("go go print\n");
@@ -96,7 +97,7 @@ void    *print_the_game(t_player *tmp)
 	    }
 	  else
 	    {
-	      printf("not start game\n");
+	      printf("Print goes to 1 \n");
 	      set_sem(tmp->semID, PRINT, 1);
 	    }
 	}
@@ -114,6 +115,7 @@ void    *print_the_game(t_player *tmp)
       set_sem(tmp->semID, MAP, 1);
     }
   set_sem(tmp->semID, PRINT, 0);
+  printf("End of the game\n");
   destroy_shared_map(tmp);
   return (NULL);
 }
