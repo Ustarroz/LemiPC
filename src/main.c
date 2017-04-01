@@ -52,6 +52,7 @@ bool	create_first_thread(t_player *tmp, pthread_t *print)
       return (false);
     }
   tmp->first = true;
+  tmp->leader = false;
   return (true);
 }
 

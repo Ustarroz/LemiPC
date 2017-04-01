@@ -86,5 +86,6 @@ int	nearest_foe(t_player *leader)
 	    pos = i;
 	  }
       }
+  //send_pos(player);
   return (pos);
 }

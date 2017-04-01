@@ -34,6 +34,7 @@ typedef struct	s_player
   int		posY;
   int		shmID;
   bool		first;
+  bool		leader;
   int		*map;
 }		t_player;
 

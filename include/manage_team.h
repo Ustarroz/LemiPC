@@ -11,10 +11,13 @@
 #ifndef MANAGE_TEAM_H_
 #define MANAGE_TEAM_H_
 
+#include "game.h"
 #include "listteam.h"
 
 int	count_clear_teams(t_listteam **list);
 int     count_players(int *map);
 int	nearest_foe(t_player *leader);
+void	move_player(t_player *player);
+void	go_to_pos(t_player *player, int pos);
 
 #endif /* !MANAGE_TEAM_H_ */

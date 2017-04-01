@@ -5,13 +5,13 @@
 ** Login   <edouard@epitech.net>
 **
 ** Started on  Fri Mar 31 22:59:39 2017 Edouard
-** Last update Sat Apr  1 08:10:20 2017 Edouard
+** Last update Sat Apr  1 11:49:39 2017 Edouard
 */
 
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
-#include "game.h"
+#include "manage_team.h"
 #include "id_manager.h"
 
 static bool	check_dead(int *map, int posx, int posy, int self_id)
@@ -83,6 +83,9 @@ void	move_player(t_player *player)
 
 static void	cycle_token(t_player *player)
 {
+  int		pos;
+
+  pos = 0; // to remove
   while (1)
     {
       set_sem(player->semID, PRINT, -1);
@@ -92,9 +95,11 @@ static void	cycle_token(t_player *player)
 	{
 	  player->map[POS(player->posX, player->posY)] = 0;
 	  set_sem(player->semID, MAP, 1);
-	  break ;
+	  break;
 	}
-      move_player(player);
+      pos = nearest_foe(player); // to remove
+      //pos = player->leader ? nearest_foe(player): receive_pos(player);
+      go_to_pos(player, pos);
       set_sem(player->semID, MAP, 1);
       usleep(TIME_SLEEP);
     }
