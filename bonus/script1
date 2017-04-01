@@ -6,6 +6,5 @@ do
     for ((y=1; y <= 3; ++y))
     do
 	./lemipc . 1 &;
-	sleep 0.3
     done
 done
