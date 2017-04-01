@@ -1,0 +1,10 @@
+#!/usr/bin/zsh
+##shell for trying the main test
+
+for ((x=1; x <= 3; ++x))
+do
+    for ((y=1; y <= 3; ++y))
+    do
+	./lemipc . $x &;
+    done
+done
