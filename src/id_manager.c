@@ -17,11 +17,11 @@
 
 void	destroy_shared_map(t_player *tmp)
 {
-  shmctl(tmp->shmID, IPC_RMID, NULL);
-  semctl(tmp->semID, START, IPC_RMID);
-  semctl(tmp->semID, PRINT, IPC_RMID);
-  semctl(tmp->semID, MAP, IPC_RMID);
-  msgctl(tmp->msgID, IPC_RMID, NULL);
+  shmctl(tmp->shm_id, IPC_RMID, NULL);
+  semctl(tmp->sem_id, START, IPC_RMID);
+  semctl(tmp->sem_id, PRINT, IPC_RMID);
+  semctl(tmp->sem_id, MAP, IPC_RMID);
+  msgctl(tmp->msg_id, IPC_RMID, NULL);
 }
 
 int		set_sem(int sem_id,

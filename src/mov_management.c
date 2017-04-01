@@ -67,14 +67,14 @@ bool	set_first_pos(t_player *player)
     if (check_pos_id(player, pos[i]))
       {
 	player->map[pos[i]] = player->team_id;
-	player->posX = POSX(pos[i]);
-	player->posY = POSY(pos[i]);
+	player->pos_x = POSX(pos[i]);
+	player->pos_y = POSY(pos[i]);
 	return (true);
       }
   i = random() % len;
   player->map[pos[i]] = player->team_id;
-  player->posX = POSX(pos[i]);
-  player->posY = POSY(pos[i]);
+  player->pos_x = POSX(pos[i]);
+  player->pos_y = POSY(pos[i]);
   player->leader = true;
   return (true);
 }
@@ -84,10 +84,11 @@ int	receive_pos(t_player *player)
   t_msg		msg;
 
   msg.type = player->team_id;
-  if (msgrcv(player->msgID, &msg, sizeof(msg),
+  if (msgrcv(player->msg_id, &msg, sizeof(msg),
 	     player->team_id, IPC_NOWAIT) == -1)
     return (-1);
-  msgsnd(player->msgID, &msg, sizeof(msg), 0);
+  ++msg.nb;
+  msgsnd(player->msg_id, &msg, sizeof(msg), 0);
   return (msg.pos);
 }
 
@@ -98,21 +99,21 @@ void	go_to_pos(t_player *player, int pos)
 
   if (pos == -1)
     return (move_player(player));
-  dirx = player->posX > POSX(pos) ? player->posX - 1 : player->posX + 1;
-  diry = player->posY > POSY(pos) ? player->posY - 1 : player->posY + 1;
-  if (ABS(POSX(pos) - player->posX) > 1 &&
-      check_spot(player->map, dirx, player->posY, player->team_id))
+  dirx = player->pos_x > POSX(pos) ? player->pos_x - 1 : player->pos_x + 1;
+  diry = player->pos_y > POSY(pos) ? player->pos_y - 1 : player->pos_y + 1;
+  if (ABS(POSX(pos) - player->pos_x) > 1 &&
+      check_spot(player->map, dirx, player->pos_y, player->team_id))
     {
-      player->map[POS(player->posX, player->posY)] = 0;
-      player->map[POS(dirx, player->posY)] = player->team_id;
-      player->posX = dirx;
+      player->map[POS(player->pos_x, player->pos_y)] = 0;
+      player->map[POS(dirx, player->pos_y)] = player->team_id;
+      player->pos_x = dirx;
     }
-  else if (ABS(POSY(pos) - player->posY) > 1 &&
-      check_spot(player->map, player->posX, diry, player->team_id))
+  else if (ABS(POSY(pos) - player->pos_y) > 1 &&
+      check_spot(player->map, player->pos_x, diry, player->team_id))
     {
-      player->map[POS(player->posX, player->posY)] = 0;
-      player->map[POS(player->posX, diry)] = player->team_id;
-      player->posY = diry;
+      player->map[POS(player->pos_x, player->pos_y)] = 0;
+      player->map[POS(player->pos_x, diry)] = player->team_id;
+      player->pos_y = diry;
     }
   else
     return (move_player(player));

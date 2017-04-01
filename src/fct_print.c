@@ -38,7 +38,7 @@ static void	set_color(char *color[NB_COLOR])
 bool		end_of_the_game(t_player *player, int nb_player)
 {
   player->map[MAP_SIZE] = 2;
-  set_sem(player->semID, PRINT, nb_player);
+  set_sem(player->sem_id, PRINT, nb_player);
   return (true);
 }
 
@@ -54,18 +54,18 @@ bool		set_after_print(t_player *player, int nb_player, int nb_teams)
       if (nb_teams > 1)
 	{
 	  player->map[MAP_SIZE] = 1;
-	  set_sem(player->semID, START, nb_player);
-	  set_sem(player->semID, PRINT, nb_player);
+	  set_sem(player->sem_id, START, nb_player);
+	  set_sem(player->sem_id, PRINT, nb_player);
 	}
       else
-	set_sem(player->semID, PRINT, 1);
+	set_sem(player->sem_id, PRINT, 1);
     }
   else if (player->map[MAP_SIZE] == 1)
     {
       if (nb_teams <= 1)
 	end = end_of_the_game(player, nb_player);
       else
-	set_sem(player->semID, PRINT, nb_player);
+	set_sem(player->sem_id, PRINT, nb_player);
     }
   return (end);
 }
@@ -83,16 +83,16 @@ void		*print_the_game(t_player *tmp)
   list = NULL;
   while (!end)
     {
-      set_sem(tmp->semID, PRINT, 0);
+      set_sem(tmp->sem_id, PRINT, 0);
       usleep(100);
-      set_sem(tmp->semID, MAP, -1);
+      set_sem(tmp->sem_id, MAP, -1);
       nb_player = count_players(tmp->map);
       list = print_map(tmp->map, list, color);
       nb_teams = count_clear_teams(&list);
       end = set_after_print(tmp, nb_player, nb_teams);
-      set_sem(tmp->semID, MAP, 1);
+      set_sem(tmp->sem_id, MAP, 1);
     }
-  set_sem(tmp->semID, PRINT, 0);
+  set_sem(tmp->sem_id, PRINT, 0);
   destroy_shared_map(tmp);
   return (NULL);
 }

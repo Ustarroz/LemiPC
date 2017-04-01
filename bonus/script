@@ -5,7 +5,7 @@ for ((x=1; x <= 3; ++x))
 do
     for ((y=1; y <= 3; ++y))
     do
-	../lemipc . $x &;
+	./lemipc . $x &;
 	sleep 0.3
     done
 done

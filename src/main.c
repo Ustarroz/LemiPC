@@ -28,23 +28,23 @@ void	init_map(int *map)
 
 bool	create_first_thread(t_player *tmp, pthread_t *print)
 {
-  if ((tmp->shmID = shmget(tmp->key, MEM_SIZE, IPC_CREAT | SHM_R | SHM_W))
+  if ((tmp->shm_id = shmget(tmp->key, MEM_SIZE, IPC_CREAT | SHM_R | SHM_W))
       == -1)
     return (false);
-  if ((tmp->map = shmat(tmp->shmID, NULL, SHM_R | SHM_W)) == NULL)
+  if ((tmp->map = shmat(tmp->shm_id, NULL, SHM_R | SHM_W)) == NULL)
     {
-      shmctl(tmp->shmID, IPC_RMID, NULL);
+      shmctl(tmp->shm_id, IPC_RMID, NULL);
       return (false);
     }
   init_map(tmp->map);
-  if ((tmp->semID = semget(tmp->key, 3, IPC_CREAT | SHM_R | SHM_W)) == -1)
+  if ((tmp->sem_id = semget(tmp->key, 3, IPC_CREAT | SHM_R | SHM_W)) == -1)
     {
-      shmctl(tmp->shmID, IPC_RMID, NULL);
+      shmctl(tmp->shm_id, IPC_RMID, NULL);
       return (false);
     }
-  semctl(tmp->semID, MAP, SETVAL, 1);
-  semctl(tmp->semID, PRINT, SETVAL, 1);
-  semctl(tmp->semID, START, SETVAL, 0);
+  semctl(tmp->sem_id, MAP, SETVAL, 1);
+  semctl(tmp->sem_id, PRINT, SETVAL, 1);
+  semctl(tmp->sem_id, START, SETVAL, 0);
   if (pthread_create(print, NULL,
 		     (void * (*)(void*))&print_the_game, tmp) != 0)
     {
@@ -85,7 +85,7 @@ t_player	*init_player(char *key_path, char *team_number, pthread_t *print)
 
   if ((tmp = check_and_init(key_path, team_number)) == NULL)
     return (NULL);
-  if ((tmp->shmID = shmget(tmp->key, MEM_SIZE, SHM_R | SHM_W)) == -1)
+  if ((tmp->shm_id = shmget(tmp->key, MEM_SIZE, SHM_R | SHM_W)) == -1)
     {
       if (create_first_thread(tmp, print) == false)
 	{
@@ -93,12 +93,12 @@ t_player	*init_player(char *key_path, char *team_number, pthread_t *print)
 	  return (NULL);
 	}
     }
-  else if ((tmp->map = shmat(tmp->shmID, NULL, SHM_R | SHM_W)) == NULL)
+  else if ((tmp->map = shmat(tmp->shm_id, NULL, SHM_R | SHM_W)) == NULL)
     {
       fprintf(stderr, "Can't get shared memory\n");
       return (NULL);
     }
-  else if ((tmp->semID = semget(tmp->key, 3, IPC_CREAT | SHM_R | SHM_W)) == -1)
+  else if ((tmp->sem_id = semget(tmp->key, 3, IPC_CREAT | SHM_R | SHM_W)) == -1)
     {
       fprintf(stderr, "Can't get semaphore\n");
       return (NULL);

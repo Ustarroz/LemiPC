@@ -62,26 +62,26 @@ void	move_player(t_player *player)
   int	pos;
 
   len = -1;
-  if (check_spot(player->map, player->posX - 1,
-		 player->posY, player->team_id))
-    tab[++len] = POS(player->posX - 1, player->posY);
-  if (check_spot(player->map, player->posX + 1,
-		 player->posY, player->team_id))
-    tab[++len] = POS(player->posX + 1, player->posY);
+  if (check_spot(player->map, player->pos_x - 1,
+		 player->pos_y, player->team_id))
+    tab[++len] = POS(player->pos_x - 1, player->pos_y);
+  if (check_spot(player->map, player->pos_x + 1,
+		 player->pos_y, player->team_id))
+    tab[++len] = POS(player->pos_x + 1, player->pos_y);
 
-  if (check_spot(player->map, player->posX,
-		 player->posY - 1, player->team_id))
-    tab[++len] = POS(player->posX, player->posY - 1);
-  if (check_spot(player->map, player->posX,
-		 player->posY + 1, player->team_id))
-    tab[++len] = POS(player->posX, player->posY + 1);
+  if (check_spot(player->map, player->pos_x,
+		 player->pos_y - 1, player->team_id))
+    tab[++len] = POS(player->pos_x, player->pos_y - 1);
+  if (check_spot(player->map, player->pos_x,
+		 player->pos_y + 1, player->team_id))
+    tab[++len] = POS(player->pos_x, player->pos_y + 1);
   if (len == -1)
     return ;
   pos = tab[random() % (len + 1)];
-  player->map[POS(player->posX, player->posY)] = 0;
+  player->map[POS(player->pos_x, player->pos_y)] = 0;
   player->map[pos] = player->team_id;
-  player->posX = POSX(pos);
-  player->posY = POSY(pos);
+  player->pos_x = POSX(pos);
+  player->pos_y = POSY(pos);
 }
 
 static void	cycle_token(t_player *player)
@@ -90,46 +90,46 @@ static void	cycle_token(t_player *player)
 
   while (1)
     {
-      set_sem(player->semID, PRINT, -1);
-      set_sem(player->semID, MAP, -1);
+      set_sem(player->sem_id, PRINT, -1);
+      set_sem(player->sem_id, MAP, -1);
       if (player->map[COLUMN_NB * LINE_NB] == 2 ||
-	  check_dead(player->map, player->posX, player->posY, player->team_id))
+	  check_dead(player->map, player->pos_x, player->pos_y, player->team_id))
 	{
-	  player->map[POS(player->posX, player->posY)] = 0;
+	  player->map[POS(player->pos_x, player->pos_y)] = 0;
 	  if (player->leader)
 	    send_pos(player, COLUMN_NB * (LINE_NB + 1) / 2);
-	  set_sem(player->semID, MAP, 1);
+	  set_sem(player->sem_id, MAP, 1);
 	  break ;
 	}
       pos = player->leader ? nearest_foe(player): receive_pos(player);
       go_to_pos(player, pos);
-      set_sem(player->semID, MAP, 1);
+      set_sem(player->sem_id, MAP, 1);
       usleep(TIME_SLEEP);
     }
 }
 
 void	start_token(t_player *player)
 {
-  set_sem(player->semID, PRINT, -1);
-  set_sem(player->semID, MAP, -1);
-  if ((player->msgID = msgget(player->key, SHM_R | SHM_W)) == -1 &&
-   (player->msgID = msgget(player->key, IPC_CREAT | SHM_R | SHM_W)) == -1)
+  set_sem(player->sem_id, PRINT, -1);
+  set_sem(player->sem_id, MAP, -1);
+  if ((player->msg_id = msgget(player->key, SHM_R | SHM_W)) == -1 &&
+   (player->msg_id = msgget(player->key, IPC_CREAT | SHM_R | SHM_W)) == -1)
     {
-      set_sem(player->semID, MAP, 1);
+      set_sem(player->sem_id, MAP, 1);
       return ;
     }
   if (!set_first_pos(player))
     {
-      set_sem(player->semID, MAP, 1);
+      set_sem(player->sem_id, MAP, 1);
       return ;
     }
   if (player->map[COLUMN_NB * LINE_NB] == 0)
     {
-      set_sem(player->semID, MAP, 1);
-      set_sem(player->semID, START, -1);
+      set_sem(player->sem_id, MAP, 1);
+      set_sem(player->sem_id, START, -1);
     }
   else
-    set_sem(player->semID, MAP, 1);
+    set_sem(player->sem_id, MAP, 1);
   usleep(TIME_SLEEP);
   cycle_token(player);
 }

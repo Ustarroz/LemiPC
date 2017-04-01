@@ -16,7 +16,7 @@
 #include <sys/sem.h>
 
 #define COLUMN_NB 100
-#define LINE_NB 50
+#define LINE_NB 60
 #define MAP_SIZE COLUMN_NB * LINE_NB
 #define MEM_SIZE (MAP_SIZE + 1) * sizeof(int)
 #define POS(x, y) ((x) + (y) * COLUMN_NB)
@@ -29,11 +29,11 @@ typedef struct	s_player
 {
   int		team_id;
   key_t		key;
-  int		semID;
-  int		posX;
-  int		posY;
-  int		shmID;
-  int 		msgID;
+  int		sem_id;
+  int		pos_x;
+  int		pos_y;
+  int		shm_id;
+  int 		msg_id;
   bool		first;
   bool		leader;
   int		*map;

@@ -65,14 +65,18 @@ int		count_clear_teams(t_listteam **list)
   return nb_team;
 }
 
-void	send_pos(t_player *leader, int pos)
+int	send_pos(t_player *leader, int pos)
 {
   t_msg	msg;
+  int	nb;
 
   msg.type = leader->team_id;
-  msgrcv(leader->msgID, &msg, sizeof(msg), leader->team_id, IPC_NOWAIT);
+  msgrcv(leader->msg_id, &msg, sizeof(msg), leader->team_id, IPC_NOWAIT);
   msg.pos = pos;
-  msgsnd(leader->msgID, &msg, sizeof(msg), 0);
+  nb = msg.nb;
+  msg.nb = 0;
+  msgsnd(leader->msg_id, &msg, sizeof(msg), 0);
+  return (nb);
 }
 
 int	nearest_foe(t_player *leader)
@@ -88,7 +92,7 @@ int	nearest_foe(t_player *leader)
   while (++i < COLUMN_NB * LINE_NB)
     if (leader->map[i] != 0 && leader->map[i] != leader->team_id)
       {
-	len = ABS(POSX(i) - leader->posX) + ABS(POSY(i) - leader->posY);
+	len = ABS(POSX(i) - leader->pos_x) + ABS(POSY(i) - leader->pos_y);
 	if (len == 1)
 	  return (i);
 	else if (len < save)
@@ -97,7 +101,8 @@ int	nearest_foe(t_player *leader)
 	    pos = i;
 	  }
       }
-  send_pos(leader, pos);
+  if (send_pos(leader, pos) <= 1)
+    return (pos);
   return (POS(POSX(pos) > 2 ? POSX(pos) - 2 : POSX(pos) + 2,
 	      POSY(pos) > 2 ? POSY(pos) - 2 : POSY(pos) + 2));
 }
