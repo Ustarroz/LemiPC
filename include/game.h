@@ -5,7 +5,7 @@
 ** Login   <ustarr_r@epitech.eu>
 **
 ** Started on  Fri Mar 24 16:52:28 2017 ustarr_r
-** Last update Fri Mar 31 23:30:43 2017 Edouard
+** Last update Sat Apr  1 09:05:39 2017 Edouard
 */
 
 #ifndef GAME_H_
@@ -22,6 +22,7 @@
 #define POS(x, y) ((x) + (y) * COLUMN_NB)
 #define POSX(i) ((i) % COLUMN_NB)
 #define POSY(i) ((i) / COLUMN_NB)
+#define ABS(x) ((x) >= 0 ? (x) : (x) * -1)
 #define TIME_SLEEP 300000
 
 typedef struct	s_player
@@ -51,5 +52,6 @@ void		print_game(int *map);
 int		count_players(int *map);
 void		*print_the_game(t_player *tmp);
 void		destroy_shared_map(t_player *tmp);
+bool		check_spot(int *map, int posx, int posy, int team_id);
 
 #endif /*!GAME_H_*/

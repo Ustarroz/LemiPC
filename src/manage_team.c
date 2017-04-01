@@ -5,7 +5,7 @@
 ** Login   <edouard@epitech.net>
 **
 ** Started on  Fri Mar 31 22:59:17 2017 Edouard
-** Last update Fri Mar 31 23:03:36 2017 Edouard
+** Last update Sat Apr  1 01:15:41 2017 Edouard
 */
 
 #include <stdlib.h>
@@ -62,4 +62,29 @@ int		count_clear_teams(t_listteam **list)
     else
       tmp = clear_team(list, tmp, save);
   return nb_team;
+}
+
+int	nearest_foe(t_player *leader)
+{
+  int	i;
+  int	pos;
+  int	len;
+  int	save;
+
+  i = -1;
+  save = COLUMN_NB + LINE_NB;
+  pos = -1;
+  while (++i < COLUMN_NB * LINE_NB)
+    if (leader->map[i] != 0 && leader->map[i] != leader->team_id)
+      {
+	len = ABS(POSX(i) - leader->posX) + ABS(POSY(i) - leader->posY);
+	if (len == 1)
+	  return (i);
+	else if (len < save)
+	  {
+	    save = len;
+	    pos = i;
+	  }
+      }
+  return (pos);
 }

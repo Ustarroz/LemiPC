@@ -5,7 +5,7 @@
 ** Login   <edouard@epitech.net>
 **
 ** Started on  Fri Mar 31 22:59:29 2017 Edouard
-** Last update Fri Mar 31 23:13:38 2017 Edouard
+** Last update Sat Apr  1 09:05:07 2017 Edouard
 */
 
 #include <stdlib.h>
@@ -75,4 +75,33 @@ bool	set_first_pos(t_player *player)
   player->posX = POSX(pos[i]);
   player->posY = POSY(pos[i]);
   return (true);
+}
+
+void	go_to_pos(t_player *player, int pos)
+{
+  int	dirx;
+  int	diry;
+  int	lenx;
+  int	leny;
+
+  if (pos == -1)
+    return ;
+  lenx = ABS(POSX(pos) - player->posX);
+  leny = ABS(POSY(pos) - player->posY);
+  dirx = player->posX > POSX(pos) ? player->posX - 1 : player->posX + 1;
+  diry = player->posY > POSY(pos) ? player->posY - 1 : player->posY + 1;
+  if (lenx >= leny && lenx >= 1 &&
+      check_spot(player->map, dirx, player->posY, player->team_id))
+    {
+      player->map[POS(player->posX, player->posY)] = 0;
+      player->map[POS(dirx, player->posY)] = player->team_id;
+      player->posX = dirx;
+    }
+  else if (leny >= lenx && lenx >= 1 &&
+      check_spot(player->map, player->posX, diry, player->team_id))
+    {
+      player->map[POS(player->posX, player->posY)] = 0;
+      player->map[POS(player->posX, diry)] = player->team_id;
+      player->posY = diry;
+    }
 }
