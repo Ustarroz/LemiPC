@@ -9,6 +9,7 @@
 */
 
 #include <stdlib.h>
+#include <sys/msg.h>
 #include "manage_team.h"
 
 static int	check_free(t_player *player, int **pos)
@@ -74,7 +75,20 @@ bool	set_first_pos(t_player *player)
   player->map[pos[i]] = player->team_id;
   player->posX = POSX(pos[i]);
   player->posY = POSY(pos[i]);
+  player->leader = true;
   return (true);
+}
+
+int	receive_pos(t_player *player)
+{
+  t_msg		msg;
+
+  msg.type = player->team_id;
+  if (msgrcv(player->msgID, &msg, sizeof(msg),
+	     player->team_id, IPC_NOWAIT) == -1)
+    return (-1);
+  msgsnd(player->msgID, &msg, sizeof(msg), 0);
+  return (msg.pos);
 }
 
 void	go_to_pos(t_player *player, int pos)

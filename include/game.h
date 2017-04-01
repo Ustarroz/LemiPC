@@ -5,7 +5,7 @@
 ** Login   <ustarr_r@epitech.eu>
 **
 ** Started on  Fri Mar 24 16:52:28 2017 ustarr_r
-** Last update Sat Apr  1 09:05:39 2017 Edouard
+** Last update Sat Apr  1 20:51:56 2017 Edouard
 */
 
 #ifndef GAME_H_
@@ -15,15 +15,15 @@
 #include <stdbool.h>
 #include <sys/sem.h>
 
-#define COLUMN_NB 10
-#define LINE_NB 10
+#define COLUMN_NB 100
+#define LINE_NB 50
 #define MAP_SIZE COLUMN_NB * LINE_NB
 #define MEM_SIZE (MAP_SIZE + 1) * sizeof(int)
 #define POS(x, y) ((x) + (y) * COLUMN_NB)
 #define POSX(i) ((i) % COLUMN_NB)
 #define POSY(i) ((i) / COLUMN_NB)
 #define ABS(x) ((x) >= 0 ? (x) : (x) * -1)
-#define TIME_SLEEP 300000
+#define TIME_SLEEP 100000
 
 typedef struct	s_player
 {
@@ -33,6 +33,7 @@ typedef struct	s_player
   int		posX;
   int		posY;
   int		shmID;
+  int 		msgID;
   bool		first;
   bool		leader;
   int		*map;

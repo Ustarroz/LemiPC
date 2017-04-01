@@ -52,7 +52,6 @@ bool	create_first_thread(t_player *tmp, pthread_t *print)
       return (false);
     }
   tmp->first = true;
-  tmp->leader = false;
   return (true);
 }
 
@@ -76,6 +75,7 @@ t_player	*check_and_init(char *key_path, char *team_number)
       return (NULL);
     }
   tmp->first = false;
+  tmp->leader = false;
   return (tmp);
 }
 

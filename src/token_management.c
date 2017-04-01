@@ -11,6 +11,9 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/msg.h>
+#include <sys/shm.h>
 #include "manage_team.h"
 #include "id_manager.h"
 
@@ -85,7 +88,6 @@ static void	cycle_token(t_player *player)
 {
   int		pos;
 
-  pos = 0; // to remove
   while (1)
     {
       set_sem(player->semID, PRINT, -1);
@@ -94,11 +96,12 @@ static void	cycle_token(t_player *player)
 	  check_dead(player->map, player->posX, player->posY, player->team_id))
 	{
 	  player->map[POS(player->posX, player->posY)] = 0;
+	  if (player->leader)
+	    send_pos(player, COLUMN_NB * (LINE_NB + 1) / 2);
 	  set_sem(player->semID, MAP, 1);
 	  break;
 	}
-      pos = nearest_foe(player); // to remove
-      //pos = player->leader ? nearest_foe(player): receive_pos(player);
+      pos = player->leader ? nearest_foe(player): receive_pos(player);
       go_to_pos(player, pos);
       set_sem(player->semID, MAP, 1);
       usleep(TIME_SLEEP);
@@ -109,6 +112,12 @@ void	start_token(t_player *player)
 {
   set_sem(player->semID, PRINT, -1);
   set_sem(player->semID, MAP, -1);
+  if ((player->msgID = msgget(player->key, SHM_R | SHM_W)) == -1 &&
+   (player->msgID = msgget(player->key, IPC_CREAT | SHM_R | SHM_W)) == -1)
+    {
+      set_sem(player->semID, MAP, 1);
+      return ;
+    }
   if (!set_first_pos(player))
     {
       set_sem(player->semID, MAP, 1);

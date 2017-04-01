@@ -12,6 +12,7 @@
 #include <sys/sem.h>
 #include <sys/shm.h>
 #include <stddef.h>
+#include <sys/msg.h>
 #include "game.h"
 
 void	destroy_shared_map(t_player *tmp)
@@ -20,6 +21,7 @@ void	destroy_shared_map(t_player *tmp)
   semctl(tmp->semID, START, IPC_RMID);
   semctl(tmp->semID, PRINT, IPC_RMID);
   semctl(tmp->semID, MAP, IPC_RMID);
+  msgctl(tmp->msgID, IPC_RMID, NULL);
 }
 
 int		set_sem(int sem_id,

@@ -9,6 +9,7 @@
 */
 
 #include <stdlib.h>
+#include <sys/msg.h>
 #include "game.h"
 #include "manage_team.h"
 
@@ -27,7 +28,7 @@ int	count_players(int *map)
   return (count);
 }
 
-t_listteam		*clear_team(t_listteam **list,
+static t_listteam	*clear_team(t_listteam **list,
 				    t_listteam *tmp,
 				    t_listteam *save)
 {
@@ -64,6 +65,16 @@ int		count_clear_teams(t_listteam **list)
   return nb_team;
 }
 
+void	send_pos(t_player *leader, int pos)
+{
+  t_msg	msg;
+
+  msg.type = leader->team_id;
+  msgrcv(leader->msgID, &msg, sizeof(msg), leader->team_id, IPC_NOWAIT);
+  msg.pos = pos;
+  msgsnd(leader->msgID, &msg, sizeof(msg), 0);
+}
+
 int	nearest_foe(t_player *leader)
 {
   int	i;
@@ -86,6 +97,7 @@ int	nearest_foe(t_player *leader)
 	    pos = i;
 	  }
       }
-  //send_pos(player);
-  return (pos);
+  send_pos(leader, pos);
+  return (POS(POSX(pos) > 2 ? POSX(pos) - 2 : POSX(pos) + 2,
+	      POSY(pos) > 2 ? POSY(pos) - 2 : POSY(pos) + 2));
 }
