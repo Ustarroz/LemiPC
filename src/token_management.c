@@ -5,7 +5,7 @@
 ** Login   <edouard@epitech.net>
 **
 ** Started on  Fri Mar 31 22:59:39 2017 Edouard
-** Last update Sat Apr  1 11:49:39 2017 Edouard
+** Last update Sat Apr  1 22:38:59 2017 Edouard
 */
 
 #include <unistd.h>
@@ -99,7 +99,7 @@ static void	cycle_token(t_player *player)
 	  if (player->leader)
 	    send_pos(player, COLUMN_NB * (LINE_NB + 1) / 2);
 	  set_sem(player->semID, MAP, 1);
-	  break;
+	  break ;
 	}
       pos = player->leader ? nearest_foe(player): receive_pos(player);
       go_to_pos(player, pos);
